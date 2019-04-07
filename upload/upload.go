@@ -11,7 +11,7 @@ package main
 import (
     "fmt"
     "log"
-    "remuadmin/auth"
+    "github.com/dwmorrin/gsuite-tools/auth"
     "google.golang.org/api/drive/v3"
     "os"
 )
@@ -34,8 +34,8 @@ func main() {
         os.Exit(1)
     }
 
-    // Get Team Drive Service
-    client := auth.GetClient(os.Args[secretPath])
+    // Get Drive Service
+    client := auth.GetClient(os.Args[secretPath], drive.DriveScope)
     srv, err := drive.New(client)
     if err != nil {
         log.Fatalf("Unable to retrieve drive Client %v", err)
@@ -48,12 +48,12 @@ func main() {
     defer newData.Close()
 
     newFile := drive.File{}
-    newFile.MimeType = `application/zip`
+    newFile.MimeType = `application/zip` // TODO determine type based on user input
 
     // make the update call
     _, err = srv.Files.Create(&newFile).
         Media(newData).
-        SupportsTeamDrives(true).
+        //SupportsTeamDrives(true). TODO add team drive as option
         Do()
     if err != nil {
         log.Fatalf("Unable to upload data %v", err)
