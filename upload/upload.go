@@ -21,17 +21,13 @@ import (
 var defaultSecretPath = filepath.Join(".credentials", "secret", "upload.json")
 
 func main() {
-    var secretPath string
+    var secretPath, folderID string
     flag.StringVar(&secretPath, "s", getDefaultSecretPath(),
         "google cloud crenditials file path",
     )
+    flag.StringVar(&folderID, "f", "", "Google Drive folder ID")
     flag.Parse()
     if flag.Arg(0) == "" {
-        //fmt.Printf("Usage: %v secretPath sourceDataPath (not yet:) targetSheetId" +
-        //    "\n  secretPath        google cloud crenditials file path" +
-        //    "\n  sourceDataPath    file you want to upload (hardcoded for zip)" +
-        //    "\n  (not implemented yet) targetFolderId    target parent folder\n",
-        //    os.Args[programName])
         fmt.Println("Usage:", os.Args[0], "[options] file")
         flag.PrintDefaults()
         os.Exit(1)
@@ -52,6 +48,10 @@ func main() {
 
     newFile := drive.File{
         Name: filepath.Base(newData.Name()),
+    }
+
+    if folderID != "" {
+        newFile.Parents = []string{folderID}
     }
 
     // make the update call
