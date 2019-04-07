@@ -1,7 +1,6 @@
 // upload is a general command line tool for Google Drive
 // currently a work in progress
 // current goal: make a general wrapper for the service.Files.Create call.
-// TODO add target folder option
 // TODO add team drive option
 
 package main
