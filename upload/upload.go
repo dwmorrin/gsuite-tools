@@ -20,11 +20,12 @@ import (
 var defaultSecretPath = filepath.Join(".credentials", "secret", "upload.json")
 
 func main() {
-    var secretPath, folderID string
+    var fileID, folderID, secretPath string
+    flag.StringVar(&fileID, "u", "", "update Google Drive file by ID")
+    flag.StringVar(&folderID, "f", "", "Google Drive folder ID")
     flag.StringVar(&secretPath, "s", getDefaultSecretPath(),
         "google cloud crenditials file path",
     )
-    flag.StringVar(&folderID, "f", "", "Google Drive folder ID")
     flag.Parse()
     if flag.Arg(0) == "" {
         fmt.Println("Usage:", os.Args[0], "[options] file")
@@ -53,13 +54,21 @@ func main() {
         newFile.Parents = []string{folderID}
     }
 
-    // make the update call
-    _, err = srv.Files.Create(&newFile).
-        Media(newData).
-        //SupportsTeamDrives(true). TODO add team drive as option
-        Do()
-    if err != nil {
-        log.Fatalf("Unable to upload data %v", err)
+    if fileID == "" {
+        _, err = srv.Files.Create(&newFile).
+            Media(newData).
+            //SupportsTeamDrives(true). TODO add team drive as option
+            Do()
+        if err != nil {
+            log.Fatalf("Unable to upload data %v", err)
+        }
+    } else {
+        _, err = srv.Files.Update(fileID, &newFile).
+            Media(newData).
+            Do()
+        if err != nil {
+            log.Fatalf("Unable to update file %v", err)
+        }
     }
 }
 
