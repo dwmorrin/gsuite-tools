@@ -54,7 +54,7 @@ func GetClient(secretFile string, scope ...string) *http.Client {
     log.Fatalf("Unable to parse client secret file to config: %v", err)
   }
 
-  cacheFile, err := tokenCacheFile()
+  cacheFile, err := tokenCacheFile(secretFile)
   if err != nil {
     log.Fatalf("Unable to get path to cached credential file. %v", err)
   }
@@ -87,7 +87,7 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 
 // tokenCacheFile generates credential file path/filename.
 // It returns the generated credential path/filename.
-func tokenCacheFile() (string, error) {
+func tokenCacheFile(tokenID string) (string, error) {
   usr, err := user.Current()
   if err != nil {
     return "", err
@@ -95,7 +95,7 @@ func tokenCacheFile() (string, error) {
   tokenCacheDir := filepath.Join(usr.HomeDir, ".credentials")
   os.MkdirAll(tokenCacheDir, 0700)
   return filepath.Join(tokenCacheDir,
-    url.QueryEscape("token-cache.json")), err
+    url.QueryEscape(tokenID + "-token-cache.json")), err
 }
 
 // tokenFromFile retrieves a Token from a given file path.
