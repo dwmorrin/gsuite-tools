@@ -9,9 +9,12 @@ import (
 
 func Download(srv *drive.Service, filename, folderID, outpath string) {
     // query string
-    q := `'` + folderID + `' in parents and name contains '` + filename + `'`
+    queryString := `name contains '` + filename + `'`
+    if folderID != "" {
+        queryString = `'` + folderID + `' in parents and ` + queryString
+    }
 
-    file, err := Query(srv, q)
+    file, err := Query(srv, queryString)
     if err != nil {
         log.Fatalf("search error, check folder Id: %v", err)
     }
