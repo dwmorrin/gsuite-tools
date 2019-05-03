@@ -25,7 +25,7 @@ func getDefaultSecretPath() string {
 }
 
 func usage() {
-    fmt.Println("Usage:", os.Args[0], "download|search|upload [options]")
+    fmt.Println("Usage:", os.Args[0], "-a download|search|upload [options] file")
     flag.PrintDefaults()
     os.Exit(1)
 }
