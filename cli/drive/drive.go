@@ -13,7 +13,7 @@ import (
 )
 
 // global default TODO move to config file
-var defaultSecretPath = filepath.Join(".credentials", "secret", "upload.json")
+var defaultSecretPath = filepath.Join(".credentials", "secret", "drive.json")
 
 func getDefaultSecretPath() string {
     user, err := user.Current()
