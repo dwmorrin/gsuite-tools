@@ -74,7 +74,11 @@ func main() {
         if err != nil {
             log.Fatalf("Unable to complete query %v", err)
         }
-        fmt.Printf("Result: %v\n", result.Name)
+        if result != nil {
+            fmt.Printf("Result: %v\n", result.Name)
+        } else {
+            fmt.Println("No results for", file)
+        }
     }
     os.Exit(0)
 }
