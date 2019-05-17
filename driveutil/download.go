@@ -7,14 +7,15 @@ import (
     "path/filepath"
 )
 
-func Download(srv *drive.Service, filename, folderID, outpath string) {
+/*Download is a wrapper for service.Files.Get().Download()*/
+func Download(srv *drive.Service, filename, folderID, driveID, outpath string) {
     // query string
     queryString := `name contains '` + filename + `'`
     if folderID != "" {
         queryString = `'` + folderID + `' in parents and ` + queryString
     }
 
-    file, err := Query(srv, queryString)
+    file, err := Query(srv, driveID, queryString)
     if err != nil {
         log.Fatalf("search error, check folder Id: %v", err)
     }

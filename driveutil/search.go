@@ -1,16 +1,24 @@
-/* custom wrappers for Drive search functions */
+/*Package driveutil contains custom wrappers for Drive search functions */
 package driveutil
 
 import (
     "google.golang.org/api/drive/v3"
 )
 
-func Query(srv *drive.Service, q string) (foundFile *drive.File, err error) {
+/*Query is a wrapper for searching Google Drive */
+func Query(srv *drive.Service, driveID string, q string) (foundFile *drive.File, err error) {
     var pageToken string
 
     for searching := true; searching; {
-        pageOfFiles, err := srv.Files.List().
-            SupportsTeamDrives(true).Q(q).PageToken(pageToken).Do()
+        filesCall := srv.Files.List();
+        if driveID != "" {
+            filesCall = filesCall.
+              IncludeItemsFromAllDrives(true).
+              SupportsAllDrives(true).
+              Corpora("teamDrive").
+              DriveId(driveID)
+        }
+        pageOfFiles, err := filesCall.Q(q).PageToken(pageToken).Do()
         if err != nil {
             return nil, err
         }
@@ -20,14 +28,12 @@ func Query(srv *drive.Service, q string) (foundFile *drive.File, err error) {
             if file.Trashed {
                 continue
             }
-            foundFile = file
-            searching = false
-            break
+            return file, nil
         }
         if pageToken == "" {
             searching = false
         }
     }
-    return foundFile, nil
+    return nil, nil
 }
 

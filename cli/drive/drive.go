@@ -32,8 +32,8 @@ func usage() {
 
 func main() {
     var (
-        action, fileID, parentID, outpath, secretPath string
-        update bool
+        action, fileID, parentID, outpath, teamDriveID, secretPath string
+        //update bool
     )
     flag.StringVar(&action, "a", "", "action: download|search|upload")
     flag.StringVar(&fileID, "f", "", "Google Drive file ID")
@@ -42,7 +42,8 @@ func main() {
     flag.StringVar(&secretPath, "s", getDefaultSecretPath(),
         "google cloud crenditials file path",
     )
-    flag.BoolVar(&update, "u", false, "update Google Drive file by ID")
+    flag.StringVar(&teamDriveID, "t", "", "Team Drive ID")
+    //flag.BoolVar(&update, "u", false, "update Google Drive file by ID")
     flag.Parse()
 
     // Get Drive Service
@@ -65,12 +66,12 @@ func main() {
                 log.Fatalf("Unable to determine current directory: %v", err)
             }
         }
-        driveutil.Download(srv, file, parentID, outpath)
+        driveutil.Download(srv, file, parentID, teamDriveID, outpath)
     }
     if action == "search" {
         //q := `'` + parentID + `' in parents and name contains '` + file + `'`
         q := `name contains '` + file + `'`
-        result, err := driveutil.Query(srv, q)
+        result, err := driveutil.Query(srv, teamDriveID, q)
         if err != nil {
             log.Fatalf("Unable to complete query %v", err)
         }
