@@ -1,15 +1,16 @@
 package main
 
 import (
-    "flag"
-    "fmt"
-    "log"
-    "github.com/dwmorrin/gsuite-tools/auth"
-    "github.com/dwmorrin/gsuite-tools/driveutil"
-    "google.golang.org/api/drive/v3"
-    "os"
-    "os/user"
-    "path/filepath"
+	"flag"
+	"fmt"
+	"log"
+	"os"
+	"os/user"
+	"path/filepath"
+
+	"github.com/dwmorrin/gsuite-tools/auth"
+	"github.com/dwmorrin/gsuite-tools/driveutil"
+	"google.golang.org/api/drive/v3"
 )
 
 // global default TODO move to config file
@@ -40,7 +41,7 @@ func main() {
     flag.StringVar(&outpath, "o", "", "output file path")
     flag.StringVar(&parentID, "p", "", "Google Drive parent folder ID")
     flag.StringVar(&secretPath, "s", getDefaultSecretPath(),
-        "google cloud crenditials file path",
+        "google cloud credentials file path",
     )
     flag.StringVar(&teamDriveID, "t", "", "Team Drive ID")
     //flag.BoolVar(&update, "u", false, "update Google Drive file by ID")
